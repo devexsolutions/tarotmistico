@@ -6,6 +6,8 @@ import SpreadSelection from './components/SpreadSelection';
 import QuestionForm from './components/QuestionForm';
 import PaymentFlow from './components/PaymentFlow';
 import ReadingResults from './components/ReadingResults';
+import AuthPage from './components/AuthPage';
+import { useAuth } from './context/AuthContext';
 
 export type SpreadType = 'single' | 'three-card' | 'celtic-cross';
 
@@ -24,10 +26,15 @@ export interface Reading {
 }
 
 function App() {
+  const { user, logout } = useAuth();
   const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results'>('landing');
   const [selectedSpread, setSelectedSpread] = useState<SpreadType>('single');
   const [question, setQuestion] = useState('');
   const [reading, setReading] = useState<Reading | null>(null);
+
+  if (!user) {
+    return <AuthPage />;
+  }
 
   const handleSpreadSelection = (spread: SpreadType) => {
     setSelectedSpread(spread);
@@ -195,7 +202,13 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+      <button
+        onClick={logout}
+        className="absolute top-4 right-4 text-purple-200 hover:text-white z-10"
+      >
+        Cerrar Sesión
+      </button>
       {/* Mystical background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 text-purple-400/20 animate-pulse">
