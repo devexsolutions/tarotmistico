@@ -6,8 +6,10 @@ import SpreadSelection from './components/SpreadSelection';
 import QuestionForm from './components/QuestionForm';
 import PaymentFlow from './components/PaymentFlow';
 import ReadingResults from './components/ReadingResults';
+import UserPanel from './components/UserPanel';
 import AuthPage from './components/AuthPage';
 import { useAuth } from './context/AuthContext';
+import { saveReading } from './services/readings';
 
 export type SpreadType = 'single' | 'three-card' | 'celtic-cross';
 
@@ -27,7 +29,7 @@ export interface Reading {
 
 function App() {
   const { user, logout } = useAuth();
-  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results'>('landing');
+  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results' | 'panel'>('landing');
   const [selectedSpread, setSelectedSpread] = useState<SpreadType>('single');
   const [question, setQuestion] = useState('');
   const [reading, setReading] = useState<Reading | null>(null);
@@ -63,12 +65,18 @@ function App() {
         timestamp: new Date()
       };
       
+      if (user) {
+        saveReading(user, reading);
+      }
       setReading(reading);
       setCurrentStep('results');
     } catch (error) {
       console.error('Error generando lectura:', error);
       // Fallback a lectura simulada si hay error
       const mockReading = generateMockReading(selectedSpread, question);
+      if (user) {
+        saveReading(user, mockReading);
+      }
       setReading(mockReading);
       setCurrentStep('results');
     }
@@ -203,12 +211,20 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
-      <button
-        onClick={logout}
-        className="absolute top-4 right-4 text-purple-200 hover:text-white z-10"
-      >
-        Cerrar Sesión
-      </button>
+      <div className="absolute top-4 right-4 flex space-x-4 z-10">
+        <button
+          onClick={() => setCurrentStep('panel')}
+          className="text-purple-200 hover:text-white"
+        >
+          Mis Lecturas
+        </button>
+        <button
+          onClick={logout}
+          className="text-purple-200 hover:text-white"
+        >
+          Cerrar Sesión
+        </button>
+      </div>
       {/* Mystical background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 text-purple-400/20 animate-pulse">
@@ -227,6 +243,16 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
 
       {currentStep === 'landing' && (
         <LandingPage onGetStarted={() => setCurrentStep('spread')} />
+      )}
+
+      {currentStep === 'panel' && (
+        <UserPanel
+          onSelect={(r) => {
+            setReading(r);
+            setCurrentStep('results');
+          }}
+          onBack={() => setCurrentStep('landing')}
+        />
       )}
       
       {currentStep === 'spread' && (
