@@ -1,4 +1,5 @@
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+const OPENAI_API_KEY =
+  import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.OPENAI_API_KEY;
 
 export interface TarotCard {
   name: string;
@@ -194,4 +195,48 @@ function extractCardMeaning(response: string, cardName: string, index: number): 
   );
 
   return relevantSentence?.trim() || 'Una carta poderosa que aporta sabiduría a tu consulta.';
+}
+
+export async function generatePalmReading(imageDataUrl: string): Promise<string> {
+  if (!OPENAI_API_KEY || OPENAI_API_KEY === 'your_openai_api_key_here') {
+    throw new Error('Por favor, configura tu API key de OpenAI en el archivo .env');
+  }
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4-vision-preview',
+        messages: [
+          {
+            role: 'system',
+            content: 'Eres un maestro quiromante. Analiza la imagen de la palma y ofrece una lectura detallada en espa\u00f1ol.'
+          },
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Interpreta las l\u00edneas y monta un mensaje orientativo.' },
+              { type: 'image_url', image_url: { url: imageDataUrl } }
+            ] as any
+          }
+        ],
+        max_tokens: 1000,
+        temperature: 0.8
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error de OpenAI: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content as string;
+  } catch (error) {
+    console.error('Error al generar lectura de mano:', error);
+    throw new Error('No se pudo generar la lectura de la mano. Int\u00e9ntalo de nuevo.');
+  }
 }
