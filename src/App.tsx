@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles } from 'lucide-react';
 import { generateTarotReading } from './services/openai';
 import LandingPage from './components/LandingPage';
@@ -29,14 +29,16 @@ export interface Reading {
 
 function App() {
   const { user, logout } = useAuth();
-  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results' | 'panel'>('landing');
+  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results' | 'panel' | 'auth'>('landing');
   const [selectedSpread, setSelectedSpread] = useState<SpreadType>('single');
   const [question, setQuestion] = useState('');
   const [reading, setReading] = useState<Reading | null>(null);
 
-  if (!user) {
-    return <AuthPage />;
-  }
+  useEffect(() => {
+    if (user && currentStep === 'auth') {
+      setCurrentStep('landing');
+    }
+  }, [user, currentStep]);
 
   const handleSpreadSelection = (spread: SpreadType) => {
     setSelectedSpread(spread);
@@ -212,18 +214,29 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
       <div className="absolute top-4 right-4 flex space-x-4 z-10">
-        <button
-          onClick={() => setCurrentStep('panel')}
-          className="text-purple-200 hover:text-white"
-        >
-          Mis Lecturas
-        </button>
-        <button
-          onClick={logout}
-          className="text-purple-200 hover:text-white"
-        >
-          Cerrar Sesión
-        </button>
+        {user ? (
+          <>
+            <button
+              onClick={() => setCurrentStep('panel')}
+              className="text-purple-200 hover:text-white"
+            >
+              Mis Lecturas
+            </button>
+            <button
+              onClick={logout}
+              className="text-purple-200 hover:text-white"
+            >
+              Cerrar Sesión
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => setCurrentStep('auth')}
+            className="text-purple-200 hover:text-white"
+          >
+            Iniciar Sesión
+          </button>
+        )}
       </div>
       {/* Mystical background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -271,19 +284,23 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
       )}
       
       {currentStep === 'payment' && (
-        <PaymentFlow 
+        <PaymentFlow
           spreadType={selectedSpread}
           question={question}
           onPaymentSuccess={handlePaymentSuccess}
           onBack={() => setCurrentStep('question')}
         />
       )}
-      
+
       {currentStep === 'results' && reading && (
-        <ReadingResults 
+        <ReadingResults
           reading={reading}
           onStartOver={handleStartOver}
         />
+      )}
+
+      {currentStep === 'auth' && (
+        <AuthPage onBack={() => setCurrentStep('landing')} />
       )}
     </div>
   );

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const AuthPage: React.FC = () => {
+interface AuthPageProps {
+  onBack?: () => void;
+}
+
+const AuthPage: React.FC<AuthPageProps> = ({ onBack }) => {
   const { login, register } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
@@ -32,6 +36,14 @@ const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen py-12 px-4 flex items-center justify-center">
       <div className="max-w-md w-full bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="mb-4 text-sm text-purple-300 hover:text-purple-100"
+          >
+            Volver
+          </button>
+        )}
         <h1 className="text-4xl font-serif text-transparent bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-center mb-6">
           {mode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h1>
