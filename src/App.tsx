@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Moon, Sun, Sparkles } from 'lucide-react';
 import { generateTarotReading } from './services/openai';
+import PalmistryPage from './components/PalmistryPage';
+import PalmistryResults from './components/PalmistryResults';
 import LandingPage from './components/LandingPage';
 import SpreadSelection from './components/SpreadSelection';
 import QuestionForm from './components/QuestionForm';
@@ -29,10 +31,11 @@ export interface Reading {
 
 function App() {
   const { user, logout } = useAuth();
-  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results' | 'panel' | 'auth'>('landing');
+  const [currentStep, setCurrentStep] = useState<'landing' | 'spread' | 'question' | 'payment' | 'results' | 'palmistry' | 'palmistry-results' | 'panel' | 'auth'>('landing');
   const [selectedSpread, setSelectedSpread] = useState<SpreadType>('single');
   const [question, setQuestion] = useState('');
   const [reading, setReading] = useState<Reading | null>(null);
+  const [palmResult, setPalmResult] = useState<string | null>(null);
 
   useEffect(() => {
     if (user && currentStep === 'auth') {
@@ -209,6 +212,12 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
     setSelectedSpread('single');
     setQuestion('');
     setReading(null);
+    setPalmResult(null);
+  };
+
+  const handlePalmistryComplete = (result: string) => {
+    setPalmResult(result);
+    setCurrentStep('palmistry-results');
   };
 
   return (
@@ -255,7 +264,10 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
       </div>
 
       {currentStep === 'landing' && (
-        <LandingPage onGetStarted={() => setCurrentStep('spread')} />
+        <LandingPage
+          onGetStarted={() => setCurrentStep('spread')}
+          onPalmistry={() => setCurrentStep('palmistry')}
+        />
       )}
 
       {currentStep === 'panel' && (
@@ -290,6 +302,17 @@ Esta lectura completa sugiere una situación compleja pero navegable. Confía en
           onPaymentSuccess={handlePaymentSuccess}
           onBack={() => setCurrentStep('question')}
         />
+      )}
+
+      {currentStep === 'palmistry' && (
+        <PalmistryPage
+          onBack={() => setCurrentStep('landing')}
+          onComplete={handlePalmistryComplete}
+        />
+      )}
+
+      {currentStep === 'palmistry-results' && palmResult && (
+        <PalmistryResults result={palmResult} onRestart={handleStartOver} />
       )}
 
       {currentStep === 'results' && reading && (
