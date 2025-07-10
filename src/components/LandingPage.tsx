@@ -75,7 +75,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           </button>
           
           <div className="mt-6 text-purple-300/60">
-            <p className="text-sm">Lecturas desde 9,99€ • Entrega instantánea • 100% satisfacción garantizada</p>
+            <p className="text-sm">Lecturas desde 1,99€ • Entrega instantánea • 100% satisfacción garantizada</p>
           </div>
         </div>
       </div>

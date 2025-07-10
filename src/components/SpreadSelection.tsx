@@ -13,7 +13,7 @@ const SpreadSelection: React.FC<SpreadSelectionProps> = ({ onSpreadSelect, onBac
     {
       type: 'single' as SpreadType,
       name: 'Una Carta',
-      price: '9,99€',
+      price: '1,99€',
       description: 'Perfecta para orientación diaria o perspectivas rápidas sobre una situación específica.',
       icon: <Star className="text-amber-400" size={32} />,
       features: ['Perspectiva rápida', 'Orientación diaria', 'Interpretación sencilla']
@@ -21,7 +21,7 @@ const SpreadSelection: React.FC<SpreadSelectionProps> = ({ onSpreadSelect, onBac
     {
       type: 'three-card' as SpreadType,
       name: 'Tirada de Tres Cartas',
-      price: '19,99€',
+      price: '3,99€',
       description: 'Explora los aspectos pasado, presente y futuro de tu pregunta.',
       icon: <Moon className="text-purple-400" size={32} />,
       features: ['Pasado, Presente, Futuro', 'Análisis detallado', 'Orientación completa']
@@ -29,7 +29,7 @@ const SpreadSelection: React.FC<SpreadSelectionProps> = ({ onSpreadSelect, onBac
     {
       type: 'celtic-cross' as SpreadType,
       name: 'Cruz Céltica',
-      price: '29,99€',
+      price: '9,99€',
       description: 'La tirada más completa para perspectivas profundas y orientación detallada.',
       icon: <Sun className="text-amber-400" size={32} />,
       features: ['Tirada de 10 cartas', 'Perspectivas profundas', 'Análisis completo de vida']

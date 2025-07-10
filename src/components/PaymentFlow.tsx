@@ -14,10 +14,10 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({ spreadType, question, onPayme
 
   const getPrice = () => {
     switch (spreadType) {
-      case 'single': return '9,99€';
-      case 'three-card': return '19,99€';
-      case 'celtic-cross': return '29,99€';
-      default: return '9,99€';
+      case 'single': return '1,99€';
+      case 'three-card': return '3,99€';
+      case 'celtic-cross': return '9,99€';
+      default: return '1,99€';
     }
   };
 

@@ -39,17 +39,17 @@ npm run dev
 
 ## 📱 Tipos de Lectura
 
-### Una Carta (9,99€)
+### Una Carta (1,99€)
 - Orientación rápida y directa
 - Perfecta para preguntas específicas
 - Interpretación concisa
 
-### Tres Cartas (19,99€)
+### Tres Cartas (3,99€)
 - Pasado, Presente, Futuro
 - Análisis temporal completo
 - Perspectiva evolutiva
 
-### Cruz Céltica (29,99€)
+### Cruz Céltica (9,99€)
 - 10 cartas para análisis profundo
 - Visión completa de la situación
 - Orientación detallada
