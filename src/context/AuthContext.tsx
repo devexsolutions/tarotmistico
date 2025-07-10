@@ -3,8 +3,8 @@ import * as auth from '../services/auth';
 
 interface AuthContextProps {
   user: string | null;
-  login: (u: string, p: string) => Promise<void>;
-  register: (u: string, p: string) => Promise<void>;
+  login: (u: string, p: string, remember?: boolean) => Promise<void>;
+  register: (u: string, p: string, e?: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -22,13 +22,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(auth.getCurrentUser());
   }, []);
 
-  const login = async (username: string, password: string) => {
-    await auth.login(username, password);
+  const login = async (username: string, password: string, remember = true) => {
+    await auth.login(username, password, remember);
     setUser(auth.getCurrentUser());
   };
 
-  const registerUser = async (username: string, password: string) => {
-    await auth.register(username, password);
+  const registerUser = async (username: string, password: string, email?: string) => {
+    await auth.register(username, password, email);
     setUser(auth.getCurrentUser());
   };
 
