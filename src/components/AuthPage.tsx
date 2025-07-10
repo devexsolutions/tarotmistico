@@ -5,8 +5,10 @@ const AuthPage: React.FC = () => {
   const { login, register } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -14,13 +16,13 @@ const AuthPage: React.FC = () => {
     setError('');
     try {
       if (mode === 'login') {
-        await login(username, password);
+        await login(username, password, remember);
       } else {
         if (password !== confirm) {
           setError('Las contraseñas no coinciden');
           return;
         }
-        await register(username, password);
+        await register(username, password, email);
       }
     } catch (err: any) {
       setError(err.message);
@@ -28,9 +30,9 @@ const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen py-12 px-4 flex items-center justify-center">
       <div className="max-w-md w-full bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20">
-        <h1 className="text-3xl font-serif text-transparent bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-center mb-6">
+        <h1 className="text-4xl font-serif text-transparent bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-center mb-6">
           {mode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h1>
         {error && <p className="text-red-400 mb-4">{error}</p>}
@@ -43,6 +45,16 @@ const AuthPage: React.FC = () => {
             required
             className="w-full p-3 rounded-lg bg-white/10 border border-purple-400/30 text-purple-100 focus:outline-none"
           />
+          {mode === 'register' && (
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className="w-full p-3 rounded-lg bg-white/10 border border-purple-400/30 text-purple-100 focus:outline-none"
+            />
+          )}
           <input
             type="password"
             placeholder="Contraseña"
@@ -60,6 +72,17 @@ const AuthPage: React.FC = () => {
               required
               className="w-full p-3 rounded-lg bg-white/10 border border-purple-400/30 text-purple-100 focus:outline-none"
             />
+          )}
+          {mode === 'login' && (
+            <label className="flex items-center text-purple-200">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={remember}
+                onChange={e => setRemember(e.target.checked)}
+              />
+              Recordar contraseña
+            </label>
           )}
           <button
             type="submit"
