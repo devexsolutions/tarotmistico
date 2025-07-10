@@ -4,9 +4,10 @@ import TarotCard from './TarotCard';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  onPalmistry: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onPalmistry }) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 relative">
       <div className="max-w-4xl mx-auto text-center">
@@ -65,7 +66,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         </div>
 
         {/* CTA Section */}
-        <div className="relative">
+        <div className="relative space-y-4">
           <button
             onClick={onGetStarted}
             className="group bg-gradient-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white font-serif text-xl px-12 py-4 rounded-full transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25"
@@ -73,8 +74,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             Comienza tu Viaje
             <ArrowRight className="inline ml-2 group-hover:translate-x-1 transition-transform" size={20} />
           </button>
-          
-          <div className="mt-6 text-purple-300/60">
+
+          <button
+            onClick={onPalmistry}
+            className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-serif text-xl px-12 py-4 rounded-full transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
+          >
+            Lectura de Manos 19,99€
+            <ArrowRight className="inline ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+          </button>
+
+          <div className="mt-2 text-purple-300/60">
             <p className="text-sm">Lecturas desde 1,99€ • Entrega instantánea • 100% satisfacción garantizada</p>
           </div>
         </div>
