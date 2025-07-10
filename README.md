@@ -75,7 +75,7 @@ npm run dev
 - [ ] Historial de lecturas
 - [ ] Cuentas de usuario
 - [ ] Exportar lecturas a PDF
-- [ ] Modo audio con síntesis de voz
+- [x] Modo audio con síntesis de voz
 - [ ] Más tipos de tiradas
 
 ## 📄 Licencia

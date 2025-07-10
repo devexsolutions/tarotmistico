@@ -1,7 +1,8 @@
-import React from 'react';
-import { Star, Download, Share2, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, Download, Share2, RotateCcw, Volume2 } from 'lucide-react';
 import TarotCard from './TarotCard';
 import { Reading } from '../App';
+import { speak, stop } from '../services/tts';
 
 interface ReadingResultsProps {
   reading: Reading;
@@ -9,6 +10,8 @@ interface ReadingResultsProps {
 }
 
 const ReadingResults: React.FC<ReadingResultsProps> = ({ reading, onStartOver }) => {
+  const [speaking, setSpeaking] = useState(false);
+  useEffect(() => stop, []);
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -35,6 +38,19 @@ const ReadingResults: React.FC<ReadingResultsProps> = ({ reading, onStartOver })
       // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
+    }
+  };
+
+  const handleSpeak = () => {
+    if (speaking) {
+      stop();
+      setSpeaking(false);
+    } else {
+      const utter = speak(reading.interpretation);
+      if (utter) {
+        utter.onend = () => setSpeaking(false);
+      }
+      setSpeaking(true);
     }
   };
 
@@ -111,6 +127,13 @@ const ReadingResults: React.FC<ReadingResultsProps> = ({ reading, onStartOver })
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={handleSpeak}
+            className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-purple-200 font-serif py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/25"
+          >
+            <Volume2 className="mr-2" size={18} />
+            {speaking ? 'Detener Audio' : 'Escuchar Interpretación'}
+          </button>
           <button
             onClick={handleShare}
             className="flex items-center justify-center bg-white/10 hover:bg-white/20 text-purple-200 font-serif py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/25"
