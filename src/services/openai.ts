@@ -210,7 +210,7 @@ export async function generatePalmReading(imageDataUrl: string): Promise<string>
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4-vision-preview',
+        model: 'gpt-4o',
         messages: [
           {
             role: 'system',
